@@ -1,0 +1,62 @@
+{% extends "layout.html" %}
+{% block content %}
+
+    <header class="masthead d-flex">
+      <div class="container text-center my-auto">
+       
+      
+        <!-- Welcome user -->
+        {% if session_username is defined %}
+          <h1 class="mb-2">Hi, {{ session_username }}!</h1>
+        {% else %}
+          <h1 class="mb-2">Welcome!</h1>
+        {% endif %}
+
+
+        {% if session_username is defined %} 
+          <h2 class="mb-2"> You and Your Followers</h2>
+        {% else %}
+          <h5 class="mb-2"> <i>All posts are listed here. To create a followers group, please log-in or sign-up.</i></h5>
+        {% endif %}
+              
+          <div style="padding-top:30;
+            padding-bottom:30;
+            background-color:#ffffff55;
+            -moz-border-radius: 5px;
+            -webkit-border-radius: 5px;">
+              
+            <!-- Show Authors Posts -->
+            {% for p in posts %}
+              <p> Author@{{ p.author }}: {{ p.content }}</p>
+            {% endfor %}
+
+          </div> 
+          <br>   
+       
+     <div class="input-group-prepend">     
+
+      <!-- NEW POST, LOGIN, SIGNUP and LOGOUT buttons --> 
+      {% if session_username is defined %}
+        <form action="/newpost" method="GET">
+          <button type="submit"> New Post </button>
+        </form>
+        <form action="/logout" method="POST">
+          <button type="submit"> Log out </button>
+        </form>
+      {% else %}
+        <form action="/login" method="GET">
+          <button type="submit"> Log in </button>
+        </form>
+        <form action="/signup" method="GET">
+          <button type="submit"> Sign up </button>
+        </form>
+      {% endif %}
+
+       <form class="form-inline" action="/search" method="POST">
+      
+          <!-- Search --> 
+    
+      </form>   
+    </div>
+  </header>
+{% endblock %}
