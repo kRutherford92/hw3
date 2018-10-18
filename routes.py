@@ -8,8 +8,8 @@ from flask_heroku import Heroku
 app = Flask(__name__)
 app.secret_key = "cscie14a-hw3"
 
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:Winchester110283@localhost:5432/hw3_db' 
-#heroku = Heroku(app)
+#app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:Winchester110283@localhost:5432/hw3_db' 
+heroku = Heroku(app)
 
 db.init_app(app)
 
@@ -19,7 +19,6 @@ db.init_app(app)
 def index():
 	if 'username' in session:
 		session_user = User.query.filter_by(username=session['username']).first()
-		#posts = Post.query.filter_by(author=session_user.uid).all()
 		users_followed = Follows.query.filter_by(follower=session_user.uid).all()
 		uids_followed = [f.following for f in users_followed] + [session_user.uid]
 		followed_posts = Post.query.filter(Post.author.in_(uids_followed)).all()
