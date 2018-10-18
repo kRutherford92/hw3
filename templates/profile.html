@@ -19,6 +19,9 @@
               -webkit-border-radius: 5px;">
               
                <!-- Author's posts --> 
+              {% for p in posts %}
+                <p>Author@{{ p.author }}: {{ p.content }}</p>
+              {% endfor %}
 
             </div>
              <br>
@@ -26,6 +29,17 @@
 
     
     <!-- Follow/Unfollow buttons --> 
+    {% if followed is defined %}
+      {% if followed %}
+        <form action="/unfollow/{{user.username}}" method="POST">
+          <button type="submit"> Unfollow </button>
+        </form>
+      {% else %}
+        <form action="/follow/{{user.username}}" method="POST">
+          <button type="submit"> Follow </button>
+        </form>
+      {% endif %}
+    {% endif %}
 
  </div>
 </header>
