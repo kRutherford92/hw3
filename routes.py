@@ -102,17 +102,18 @@ def search():
 def profile(username):
 	profile_user = User.query.filter_by(username=username).first()
 	profile_user_posts = Post.query.filter_by(author=profile_user.uid).all()
+	all_users=User.query.all()
 
 	if "username" in session:
 		session_user = User.query.filter_by(username=session['username']).first()
 		if session_user.uid==profile_user.uid:
-			return render_template('profile.html', user=profile_user, posts=profile_user_posts)
+			return render_template('profile.html', user=profile_user, posts=profile_user_posts, users=all_users)
 		if Follows.query.filter_by(follower=session_user.uid, following=profile_user.uid).first():
 			followed = True
 		else:
 			followed = False
-		return render_template('profile.html', user=profile_user, posts=profile_user_posts, followed=followed)
-	return render_template('profile.html', user=profile_user, posts=profile_user_posts)
+		return render_template('profile.html', user=profile_user, posts=profile_user_posts, followed=followed, users=all_users)
+	return render_template('profile.html', user=profile_user, posts=profile_user_posts, users=all_users)
 
 @app.route('/follow/<username>', methods=['POST'])
 def follow(username):
