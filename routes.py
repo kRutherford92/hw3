@@ -4,12 +4,13 @@ from passlib.hash import sha256_crypt
 from models import db, User, Post, Follows
 from forms import LoginForm, SignupForm, NewpostForm
 from flask_heroku import Heroku
+import sys
 
 app = Flask(__name__)
 app.secret_key = "cscie14a-hw3"
 
-#app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:Winchester110283@localhost:5432/hw3_db' 
-heroku = Heroku(app)
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:Winchester110283@localhost:5432/hw3_db' 
+#heroku = Heroku(app)
 
 db.init_app(app)
 
@@ -22,11 +23,13 @@ def index():
 		users_followed = Follows.query.filter_by(follower=session_user.uid).all()
 		uids_followed = [f.following for f in users_followed] + [session_user.uid]
 		followed_posts = Post.query.filter(Post.author.in_(uids_followed)).all()
+		users=User.query.all()
 
-		return render_template('index.html', title='Home', posts=followed_posts, session_username=session_user.username)
+		return render_template('index.html', title='Home', posts=followed_posts, session_username=session_user.username, users=users)
 	else:
 		all_posts = Post.query.all()
-		return render_template('index.html', title='Home', posts=all_posts)
+		all_users = User.query.all()
+		return render_template('index.html', title='Home', posts=all_posts, users=all_users)
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -102,6 +105,8 @@ def profile(username):
 
 	if "username" in session:
 		session_user = User.query.filter_by(username=session['username']).first()
+		if session_user.uid==profile_user.uid:
+			return render_template('profile.html', user=profile_user, posts=profile_user_posts)
 		if Follows.query.filter_by(follower=session_user.uid, following=profile_user.uid).first():
 			followed = True
 		else:

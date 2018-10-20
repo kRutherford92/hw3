@@ -26,8 +26,13 @@
             -webkit-border-radius: 5px;">
               
             <!-- Show Authors Posts -->
+
             {% for p in posts %}
-              <p> Author@{{ p.author }}: {{ p.content }}</p>
+              {% for u in users %}
+                {% if p.author == u.uid %}
+                  <p> {{ u.username }}: {{ p.content }}</p>
+                {% endif %}
+              {% endfor %}
             {% endfor %}
 
           </div> 
